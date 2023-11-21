@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,12 +8,18 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { rootAuthLoader } from "@clerk/remix/ssr.server";
+import { ClerkApp, ClerkErrorBoundary } from "@clerk/remix";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
-export default function App() {
+export const loader: LoaderFunction = (args) => rootAuthLoader(args);
+
+export const ErrorBoundary = ClerkErrorBoundary();
+
+export default ClerkApp(function App() {
   return (
     <html lang="en">
       <head>
@@ -30,4 +36,4 @@ export default function App() {
       </body>
     </html>
   );
-}
+});

@@ -9,6 +9,8 @@ import express from "express";
 import morgan from "morgan";
 import sourceMapSupport from "source-map-support";
 
+import basicAuth from "express-basic-auth";
+
 sourceMapSupport.install();
 installGlobals();
 
@@ -27,6 +29,13 @@ const remixHandler =
       });
 
 const app = express();
+
+app.use(
+  basicAuth({
+    users: { admin: "supersecret" },
+    challenge: true,
+  })
+);
 
 app.use(compression());
 
